@@ -1750,138 +1750,164 @@ function SchoolDetailPanel({ school, onClose, onUpdate }) {
   const inputCls = "w-full text-[14px] border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20 transition-colors"
   const labelCls = "block text-[11px] font-medium text-gray-400 mb-1.5 uppercase tracking-wide"
 
+  const sectionCls = "rounded-2xl bg-white"
+  const sectionStyle = { padding: "24px 28px", border: "1px solid #F0F0F0" }
+  const sectionTitleCls = "text-[15px] font-semibold mb-4"
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-[740px] max-h-[88vh] bg-white flex flex-col animate-fade-in" style={{ borderRadius: "1.25rem", boxShadow: "0 25px 60px rgba(0,0,0,0.15)" }}>
+      <div className="relative w-[860px] max-h-[90vh] bg-white flex flex-col animate-fade-in" style={{ borderRadius: "1.5rem", boxShadow: "0 25px 60px rgba(0,0,0,0.15)" }}>
 
         {/* ── Header ── */}
-        <div className="flex-shrink-0 px-8 pt-7 pb-0" style={{ borderBottom: "1px solid #F3F4F6", borderRadius: "1.25rem 1.25rem 0 0" }}>
-          <div className="flex items-start justify-between mb-4">
+        <div className="flex-shrink-0 px-10 pt-8 pb-0" style={{ borderBottom: "1px solid #F0F0F0", borderRadius: "1.5rem 1.5rem 0 0" }}>
+          <div className="flex items-start justify-between mb-5">
             <div>
-              <h2 className="text-[24px] font-bold" style={{ color: "#000" }}>{school.name}</h2>
-              <div className="flex items-center gap-2 mt-2">
+              <h2 className="text-[26px] font-bold" style={{ color: "#000" }}>{school.name}</h2>
+              <div className="flex items-center gap-2.5 mt-3">
                 <StageBadge stage={school.stage} />
                 <ConfidenceBadge confidence={school.confidence} />
                 {school.partnerType && <PartnerTypeBadge type={school.partnerType} />}
               </div>
             </div>
-            <button onClick={onClose} className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"><X size={18} style={{ color: "#999" }} /></button>
+            <button onClick={onClose} className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"><X size={20} style={{ color: "#999" }} /></button>
           </div>
-          {/* Underline tabs */}
-          <div className="flex">
-            {["overview", "contacts", "emails", "notes"].map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab)} className="px-5 py-3 text-[14px] font-medium transition-all relative" style={{ color: activeTab === tab ? ACCENT : "#999" }}>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}{tab === "contacts" && contacts.length > 0 ? ` (${contacts.length})` : ""}
-                {activeTab === tab && <div className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full" style={{ backgroundColor: ACCENT }} />}
+          {/* Tab bar */}
+          <div className="flex gap-1">
+            {[
+              { id: "overview", label: "Overview" },
+              { id: "contacts", label: `Contacts${contacts.length > 0 ? ` (${contacts.length})` : ""}` },
+              { id: "emails", label: "Emails" },
+              { id: "notes", label: "Notes" },
+            ].map(tab => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="px-6 py-3.5 text-[14px] font-semibold transition-all relative" style={{ color: activeTab === tab.id ? ACCENT : "#999" }}>
+                {tab.label}
+                {activeTab === tab.id && <div className="absolute bottom-0 left-3 right-3 h-[3px] rounded-full" style={{ backgroundColor: ACCENT }} />}
               </button>
             ))}
           </div>
         </div>
 
         {/* ── Scrollable Content ── */}
-        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+        <div className="flex-1 overflow-y-auto px-10 py-8" style={{ backgroundColor: "#FAFAFA" }}>
+          <div className="space-y-6">
 
           {activeTab === "overview" && (
             <>
-              {/* Pricing row */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="rounded-xl" style={{ padding: "16px 20px", backgroundColor: ACCENT_LIGHT }}>
-                  <div className="text-[13px] mb-1" style={{ color: "#666" }}>Students</div>
-                  <div className="text-[20px] font-bold" style={{ color: "#000" }}>{school.studentPopulation?.toLocaleString() || "—"}</div>
+              {/* Pricing cards */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="rounded-2xl text-center" style={{ padding: "24px 20px", background: GRADIENT }}>
+                  <div className="text-[13px] mb-2 font-medium" style={{ color: "rgba(255,255,255,0.8)" }}>Students</div>
+                  <div className="text-[26px] font-bold text-white">{school.studentPopulation?.toLocaleString() || "—"}</div>
                 </div>
-                <div className="rounded-xl" style={{ padding: "16px 20px", backgroundColor: ACCENT_LIGHT }}>
-                  <div className="text-[13px] mb-1" style={{ color: "#666" }}>Standard Price</div>
-                  <div className="text-[20px] font-bold" style={{ color: "#000" }}>{formatCurrency(tier.standard)}</div>
+                <div className="rounded-2xl text-center" style={{ padding: "24px 20px", backgroundColor: "#FFF", border: "1px solid #F0F0F0" }}>
+                  <div className="text-[13px] mb-2 font-medium" style={{ color: "#999" }}>Standard Price</div>
+                  <div className="text-[26px] font-bold" style={{ color: "#000" }}>{formatCurrency(tier.standard)}</div>
                 </div>
-                <div className="rounded-xl" style={{ padding: "16px 20px", backgroundColor: ACCENT_LIGHT }}>
-                  <div className="text-[13px] mb-1" style={{ color: "#666" }}>Premium Price</div>
-                  <div className="text-[20px] font-bold" style={{ color: "#000" }}>{formatCurrency(tier.premium)}</div>
-                </div>
-              </div>
-
-              {/* Stage & Confidence */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className={labelCls}>Stage</label>
-                  <select value={school.stage} onChange={(e) => onUpdate({ stage: e.target.value })} className={inputCls}>
-                    {STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className={labelCls}>Confidence</label>
-                  <select value={school.confidence} onChange={(e) => onUpdate({ confidence: e.target.value })} className={inputCls}>
-                    {["N/A", "Low", "Medium", "High", "Very High"].map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                <div className="rounded-2xl text-center" style={{ padding: "24px 20px", backgroundColor: "#FFF", border: "1px solid #F0F0F0" }}>
+                  <div className="text-[13px] mb-2 font-medium" style={{ color: "#999" }}>Premium Price</div>
+                  <div className="text-[26px] font-bold" style={{ color: "#000" }}>{formatCurrency(tier.premium)}</div>
                 </div>
               </div>
 
-              {/* Follow-up date */}
-              <div>
-                <label className={labelCls}>Follow-up Date</label>
-                <div className="relative">
-                  <Calendar size={14} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "#CCC" }} />
-                  <input type="date" value={school.nextActionDate || ""} onChange={(e) => onUpdate({ nextActionDate: e.target.value })} className={inputCls + " pl-10"} />
+              {/* Stage & Confidence section */}
+              <div className={sectionCls} style={sectionStyle}>
+                <div className={sectionTitleCls} style={{ color: "#000" }}>Deal Settings</div>
+                <div className="grid grid-cols-2 gap-5">
+                  <div>
+                    <label className={labelCls}>Stage</label>
+                    <select value={school.stage} onChange={(e) => onUpdate({ stage: e.target.value })} className={inputCls} style={{ padding: "12px 16px", fontSize: "15px" }}>
+                      {STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className={labelCls}>Confidence</label>
+                    <select value={school.confidence} onChange={(e) => onUpdate({ confidence: e.target.value })} className={inputCls} style={{ padding: "12px 16px", fontSize: "15px" }}>
+                      {["N/A", "Low", "Medium", "High", "Very High"].map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              {/* Next action */}
-              <div>
-                <label className={labelCls}>Next Action</label>
-                <input type="text" value={school.nextAction || ""} onChange={(e) => onUpdate({ nextAction: e.target.value })} placeholder="What needs to happen next?" className={inputCls} />
+              {/* Follow-up & Next action section */}
+              <div className={sectionCls} style={sectionStyle}>
+                <div className={sectionTitleCls} style={{ color: "#000" }}>Follow-Up</div>
+                <div className="space-y-5">
+                  <div>
+                    <label className={labelCls}>Follow-up Date</label>
+                    <div className="relative">
+                      <Calendar size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "#BBB" }} />
+                      <input type="date" value={school.nextActionDate || ""} onChange={(e) => onUpdate({ nextActionDate: e.target.value })} className={inputCls} style={{ paddingLeft: "44px", padding: "12px 16px 12px 44px", fontSize: "15px" }} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelCls}>Next Action</label>
+                    <input type="text" value={school.nextAction || ""} onChange={(e) => onUpdate({ nextAction: e.target.value })} placeholder="What needs to happen next?" className={inputCls} style={{ padding: "12px 16px", fontSize: "15px" }} />
+                  </div>
+                </div>
               </div>
 
-              {/* Stage-aware checklist */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[13px] font-semibold" style={{ color: "#333" }}>{stageLabel}</span>
-                  <span className="text-[12px]" style={{ color: "#999" }}>{checklistDone}/{currentChecklist.length} complete</span>
+              {/* Stage checklist section */}
+              <div className={sectionCls} style={sectionStyle}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className={sectionTitleCls} style={{ color: "#000", marginBottom: 0 }}>{stageLabel} Checklist</div>
+                  <span className="text-[13px] font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: checklistDone === currentChecklist.length ? "#F0FDF4" : ACCENT_LIGHT, color: checklistDone === currentChecklist.length ? "#80C97A" : ACCENT }}>{checklistDone}/{currentChecklist.length}</span>
                 </div>
-                <div className="rounded-xl space-y-1" style={{ padding: "14px 20px", backgroundColor: "#FAFAFA", border: "1px solid #F3F4F6" }}>
+                <div className="space-y-1">
                   {currentChecklist.map(({ key, label }) => (
-                    <label key={key} className="flex items-center gap-3 py-1.5 cursor-pointer group">
-                      <div className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-colors" style={{ backgroundColor: school[key] ? ACCENT : "#FFF", border: school[key] ? "none" : "1.5px solid #D1D5DB" }} onClick={() => onUpdate({ [key]: !school[key] })}>
-                        {school[key] && <Check size={12} className="text-white" />}
+                    <label key={key} className="flex items-center gap-4 py-3 px-4 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors" style={{ border: "1px solid transparent" }}>
+                      <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-all" style={{ backgroundColor: school[key] ? ACCENT : "#FFF", border: school[key] ? "none" : "2px solid #D1D5DB" }} onClick={() => onUpdate({ [key]: !school[key] })}>
+                        {school[key] && <Check size={14} className="text-white" />}
                       </div>
-                      <span className="text-[13px] group-hover:text-black transition-colors" style={{ color: school[key] ? "#000" : "#666", textDecoration: school[key] ? "none" : "none" }}>{label}</span>
+                      <span className="text-[14px]" style={{ color: school[key] ? "#000" : "#555" }}>{label}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Email progress bar */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[13px] font-semibold" style={{ color: "#333" }}>Email Sequence</span>
-                  <span className="text-[12px]" style={{ color: "#999" }}>{school.emailStep}/14</span>
+              {/* Email sequence section */}
+              <div className={sectionCls} style={sectionStyle}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className={sectionTitleCls} style={{ color: "#000", marginBottom: 0 }}>Email Sequence</div>
+                  <span className="text-[13px] font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: school.emailStep >= 14 ? "#F0FDF4" : ACCENT_LIGHT, color: school.emailStep >= 14 ? "#80C97A" : ACCENT }}>{school.emailStep}/14</span>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 mb-3">
                   {EMAIL_SEQUENCE.map((e, i) => (
-                    <div key={i} title={e.name} className="flex-1 h-2.5 rounded-full transition-all cursor-pointer" style={{ background: i < school.emailStep ? GRADIENT : i === school.emailStep ? "rgba(91,180,169,0.25)" : "#EDEDED" }} onClick={() => onUpdate({ emailStep: i + 1 })} />
+                    <div key={i} title={e.name} className="flex-1 h-3 rounded-full transition-all cursor-pointer hover:opacity-80" style={{ background: i < school.emailStep ? GRADIENT : i === school.emailStep ? "rgba(91,180,169,0.25)" : "#EDEDED" }} onClick={() => onUpdate({ emailStep: i + 1 })} />
                   ))}
                 </div>
-                <div className="text-[11px] mt-1.5" style={{ color: "#CCC" }}>
-                  {school.emailStep < 14 ? `Next: ${EMAIL_SEQUENCE[school.emailStep]?.name}` : "All emails sent"}
+                <div className="text-[13px]" style={{ color: "#999" }}>
+                  {school.emailStep < 14 ? <>Next: <span style={{ color: ACCENT, fontWeight: 600 }}>{EMAIL_SEQUENCE[school.emailStep]?.name}</span></> : <span style={{ color: "#80C97A", fontWeight: 600 }}>All emails sent</span>}
                 </div>
               </div>
 
               {/* Active Partner Section */}
               {school.stage === "active_partner" && (
-                <div>
-                  <div className="text-[13px] font-semibold mb-3" style={{ color: "#333" }}>Partner Details</div>
-                  <div className="rounded-xl space-y-3" style={{ padding: "16px 20px", backgroundColor: ACCENT_LIGHT }}>
-                    <div className="grid grid-cols-2 gap-3 text-[13px]">
-                      <div><span style={{ color: "#999" }}>Type:</span> <PartnerTypeBadge type={school.partnerType} /></div>
-                      <div><span style={{ color: "#999" }}>Contract:</span> <span style={{ color: "#000" }}>{school.contractTerm || "—"}</span></div>
-                      <div><span style={{ color: "#999" }}>Paid:</span> <span style={{ color: "#000" }}>{formatCurrency(school.amountPaid)}</span></div>
-                      <div><span style={{ color: "#999" }}>Launched:</span> <span style={{ color: "#000" }}>{formatDate(school.launchDate)}</span></div>
+                <div className={sectionCls} style={sectionStyle}>
+                  <div className={sectionTitleCls} style={{ color: "#000" }}>Partner Details</div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="rounded-xl" style={{ padding: "14px 18px", backgroundColor: "#FAFAFA" }}>
+                      <div className="text-[12px] font-medium mb-1" style={{ color: "#999" }}>Type</div>
+                      <PartnerTypeBadge type={school.partnerType} />
                     </div>
-                    {(school.distributionChannels || []).length > 0 && (
-                      <div className="flex flex-wrap gap-1.5">
-                        {school.distributionChannels.map(ch => <span key={ch} className="px-3 py-1 bg-white rounded-full text-[11px]" style={{ color: "#666" }}>{ch}</span>)}
-                      </div>
-                    )}
+                    <div className="rounded-xl" style={{ padding: "14px 18px", backgroundColor: "#FAFAFA" }}>
+                      <div className="text-[12px] font-medium mb-1" style={{ color: "#999" }}>Contract</div>
+                      <div className="text-[14px] font-semibold" style={{ color: "#000" }}>{school.contractTerm || "—"}</div>
+                    </div>
+                    <div className="rounded-xl" style={{ padding: "14px 18px", backgroundColor: "#FAFAFA" }}>
+                      <div className="text-[12px] font-medium mb-1" style={{ color: "#999" }}>Amount Paid</div>
+                      <div className="text-[14px] font-semibold" style={{ color: "#000" }}>{formatCurrency(school.amountPaid)}</div>
+                    </div>
+                    <div className="rounded-xl" style={{ padding: "14px 18px", backgroundColor: "#FAFAFA" }}>
+                      <div className="text-[12px] font-medium mb-1" style={{ color: "#999" }}>Launch Date</div>
+                      <div className="text-[14px] font-semibold" style={{ color: "#000" }}>{formatDate(school.launchDate)}</div>
+                    </div>
                   </div>
+                  {(school.distributionChannels || []).length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {school.distributionChannels.map(ch => <span key={ch} className="px-4 py-1.5 rounded-full text-[12px] font-medium" style={{ backgroundColor: ACCENT_LIGHT, color: ACCENT }}>{ch}</span>)}
+                    </div>
+                  )}
                 </div>
               )}
             </>
@@ -2037,6 +2063,8 @@ function SchoolDetailPanel({ school, onClose, onUpdate }) {
               </div>
             </div>
           )}
+
+          </div>
         </div>
       </div>
       {showAIImport && (
@@ -2971,120 +2999,102 @@ function CoalitionDetailPanel({ coalition, onClose, onUpdate, universities }) {
     onUpdate({ contacts })
   }
 
+  const cSectionCls = "rounded-2xl bg-white"
+  const cSectionStyle = { padding: "24px 28px", border: "1px solid #F0F0F0" }
+  const cInputCls = "w-full text-[14px] border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20 transition-colors"
+  const cLabelCls = "block text-[11px] font-medium text-gray-400 mb-1.5 uppercase tracking-wide"
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-[720px] max-h-[85vh] bg-white shadow-2xl overflow-y-auto animate-fade-in" style={{ borderRadius: "1rem" }}>
+      <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-[860px] max-h-[90vh] bg-white flex flex-col animate-fade-in" style={{ borderRadius: "1.5rem", boxShadow: "0 25px 60px rgba(0,0,0,0.15)" }}>
+
         {/* Header */}
-        <div className="sticky top-0 bg-white z-10" style={{ borderBottom: "1px solid #E5E5E5", borderRadius: "1rem 1rem 0 0" }}>
-          <div className="px-8 pt-8 pb-0">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-[22px] font-medium" style={{ color: "#000000" }}>{coalition.name}</h2>
-                <div className="flex items-center gap-2.5 mt-3">
-                  <CoalitionStageBadge stage={coalition.stage} />
-                  <span className="text-[13px] px-3 py-1 rounded-full" style={{ backgroundColor: "#F0F0F0", color: "#6B7280" }}>{coalition.state}</span>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-bold" style={{ background: coalition.sentBy === "Julian" ? GRADIENT : "#6B7280" }}>
-                      {coalition.sentBy?.[0] || "?"}
-                    </div>
-                    <span className="text-[12px]" style={{ color: "#999999" }}>{coalition.sentBy}</span>
+        <div className="flex-shrink-0 px-10 pt-8 pb-0" style={{ borderBottom: "1px solid #F0F0F0", borderRadius: "1.5rem 1.5rem 0 0" }}>
+          <div className="flex items-start justify-between mb-5">
+            <div>
+              <h2 className="text-[26px] font-bold" style={{ color: "#000" }}>{coalition.name}</h2>
+              <div className="flex items-center gap-2.5 mt-3">
+                <CoalitionStageBadge stage={coalition.stage} />
+                <span className="text-[13px] font-medium px-3 py-1.5 rounded-full" style={{ backgroundColor: "#F0F0F0", color: "#6B7280" }}>{coalition.state}</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold" style={{ background: coalition.sentBy === "Julian" ? GRADIENT : "#6B7280" }}>
+                    {coalition.sentBy?.[0] || "?"}
                   </div>
+                  <span className="text-[13px]" style={{ color: "#999" }}>{coalition.sentBy}</span>
                 </div>
               </div>
-              <button onClick={onClose} className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                <X size={22} style={{ color: "#333333" }} />
-              </button>
             </div>
+            <button onClick={onClose} className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"><X size={20} style={{ color: "#999" }} /></button>
           </div>
-          <div className="flex gap-2 px-8 mt-5 pb-4">
-            {["overview", "contacts", "notes"].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className="px-5 py-2 rounded-full text-[15px] font-normal transition-all"
-                style={{ backgroundColor: activeTab === tab ? "#EAF6F5" : "transparent", color: activeTab === tab ? "#5BB4A9" : "#333333" }}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+          {/* Tab bar */}
+          <div className="flex gap-1">
+            {[
+              { id: "overview", label: "Overview" },
+              { id: "contacts", label: `Contacts (${(coalition.contacts || []).length})` },
+              { id: "notes", label: "Notes" },
+            ].map(tab => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="px-6 py-3.5 text-[14px] font-semibold transition-all relative" style={{ color: activeTab === tab.id ? ACCENT : "#999" }}>
+                {tab.label}
+                {activeTab === tab.id && <div className="absolute bottom-0 left-3 right-3 h-[3px] rounded-full" style={{ backgroundColor: ACCENT }} />}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="px-8 py-7 space-y-7">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-10 py-8" style={{ backgroundColor: "#FAFAFA" }}>
+          <div className="space-y-6">
+
           {activeTab === "overview" && (
             <>
-              {/* Stage */}
-              <div>
-                <h3 className="text-[14px] font-medium mb-3" style={{ color: "#333333" }}>Stage</h3>
-                <select
-                  value={coalition.stage}
-                  onChange={(e) => onUpdate({ stage: e.target.value })}
-                  className="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20"
-                >
-                  {COALITION_STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
-                </select>
+              {/* Stage & Sent By */}
+              <div className={cSectionCls} style={cSectionStyle}>
+                <div className="text-[15px] font-semibold mb-5" style={{ color: "#000" }}>Coalition Settings</div>
+                <div className="space-y-5">
+                  <div>
+                    <label className={cLabelCls}>Stage</label>
+                    <select value={coalition.stage} onChange={(e) => onUpdate({ stage: e.target.value })} className={cInputCls} style={{ fontSize: "15px" }}>
+                      {COALITION_STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className={cLabelCls}>Sent By</label>
+                    <div className="flex gap-3">
+                      {["Julian", "Fred"].map(person => (
+                        <button key={person} onClick={() => onUpdate({ sentBy: person })} className="flex items-center gap-2.5 px-5 py-3 rounded-xl text-[14px] font-medium transition-all" style={{ backgroundColor: coalition.sentBy === person ? (person === "Julian" ? ACCENT_LIGHT : "#F0F0F0") : "#FFF", color: coalition.sentBy === person ? (person === "Julian" ? ACCENT : "#333") : "#999", border: coalition.sentBy === person ? `2px solid ${person === "Julian" ? ACCENT : "#999"}` : "2px solid #E5E5E5" }}>
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-bold" style={{ background: person === "Julian" ? GRADIENT : "#6B7280" }}>{person[0]}</div>
+                          {person}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Pitch Angle */}
-              <div>
-                <h3 className="text-[14px] font-medium mb-3" style={{ color: "#333333" }}>Pitch Angle</h3>
-                <textarea
-                  value={coalition.pitchAngle || ""}
-                  onChange={(e) => onUpdate({ pitchAngle: e.target.value })}
-                  rows={3}
-                  className="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20 resize-y"
-                  placeholder="Describe the pitch angle for this coalition..."
-                />
-              </div>
-
-              {/* Sent By */}
-              <div>
-                <h3 className="text-[14px] font-medium mb-3" style={{ color: "#333333" }}>Sent By</h3>
-                <div className="flex gap-3">
-                  {["Julian", "Fred"].map(person => (
-                    <button
-                      key={person}
-                      onClick={() => onUpdate({ sentBy: person })}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-full text-[14px] font-medium transition-all"
-                      style={{
-                        backgroundColor: coalition.sentBy === person ? (person === "Julian" ? "#EAF6F5" : "#F0F0F0") : "transparent",
-                        color: coalition.sentBy === person ? (person === "Julian" ? "#5BB4A9" : "#333333") : "#999999",
-                        border: coalition.sentBy === person ? "none" : "1px solid #E5E5E5",
-                      }}
-                    >
-                      <div className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-bold" style={{ background: person === "Julian" ? GRADIENT : "#6B7280" }}>{person[0]}</div>
-                      {person}
-                    </button>
-                  ))}
-                </div>
+              <div className={cSectionCls} style={cSectionStyle}>
+                <div className="text-[15px] font-semibold mb-4" style={{ color: "#000" }}>Pitch Angle</div>
+                <textarea value={coalition.pitchAngle || ""} onChange={(e) => onUpdate({ pitchAngle: e.target.value })} rows={4} className={cInputCls + " resize-y"} style={{ fontSize: "15px" }} placeholder="Describe the pitch angle for this coalition..." />
               </div>
 
               {/* Linked Universities */}
-              <div>
-                <h3 className="text-[14px] font-medium mb-3" style={{ color: "#333333" }}>Linked Universities</h3>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {(coalition.linkedUniversities || []).map(uid => {
-                    const u = universities.find(u => u.id === uid)
-                    return u ? (
-                      <span key={uid} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium" style={{ backgroundColor: "#EAF6F5", color: "#5BB4A9" }}>
-                        {u.shortName}
-                        <button onClick={() => onUpdate({ linkedUniversities: coalition.linkedUniversities.filter(id => id !== uid) })} className="hover:opacity-70">
-                          <X size={10} />
-                        </button>
-                      </span>
-                    ) : null
-                  })}
-                </div>
-                <select
-                  value=""
-                  onChange={(e) => {
-                    if (e.target.value && !(coalition.linkedUniversities || []).includes(e.target.value)) {
-                      onUpdate({ linkedUniversities: [...(coalition.linkedUniversities || []), e.target.value] })
-                    }
-                  }}
-                  className="text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20"
-                >
+              <div className={cSectionCls} style={cSectionStyle}>
+                <div className="text-[15px] font-semibold mb-4" style={{ color: "#000" }}>Linked Universities</div>
+                {(coalition.linkedUniversities || []).length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {(coalition.linkedUniversities || []).map(uid => {
+                      const u = universities.find(u => u.id === uid)
+                      return u ? (
+                        <span key={uid} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-medium" style={{ backgroundColor: ACCENT_LIGHT, color: ACCENT }}>
+                          {u.shortName || u.name}
+                          <button onClick={() => onUpdate({ linkedUniversities: coalition.linkedUniversities.filter(id => id !== uid) })} className="w-5 h-5 rounded-full flex items-center justify-center hover:bg-white/60 transition-colors"><X size={11} /></button>
+                        </span>
+                      ) : null
+                    })}
+                  </div>
+                )}
+                <select value="" onChange={(e) => { if (e.target.value && !(coalition.linkedUniversities || []).includes(e.target.value)) { onUpdate({ linkedUniversities: [...(coalition.linkedUniversities || []), e.target.value] }) } }} className={cInputCls} style={{ fontSize: "15px" }}>
                   <option value="">Link a university...</option>
                   {universities.filter(u => !(coalition.linkedUniversities || []).includes(u.id)).map(u => (
                     <option key={u.id} value={u.id}>{u.name}</option>
@@ -3095,71 +3105,80 @@ function CoalitionDetailPanel({ coalition, onClose, onUpdate, universities }) {
           )}
 
           {activeTab === "contacts" && (
-            <div>
-              <h3 className="text-[14px] font-medium mb-3" style={{ color: "#333333" }}>Contacts</h3>
-              <div className="space-y-3 mb-5">
-                {(coalition.contacts || []).map((contact, idx) => (
-                  <div key={idx} className="rounded-xl" style={{ padding: "16px 20px", backgroundColor: "#F9FAFB" }}>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-[13px] font-medium" style={{ color: "#333333" }}>Contact {idx + 1}</span>
-                      <button onClick={() => removeContact(idx)} className="text-[12px] hover:opacity-70" style={{ color: "#E53E3E" }}>Remove</button>
+            <div className="space-y-4">
+              {/* Existing contacts */}
+              {(coalition.contacts || []).map((contact, idx) => (
+                <div key={idx} className={cSectionCls} style={cSectionStyle}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-[12px] font-bold" style={{ background: GRADIENT }}>
+                        {(contact.name || "?")[0]}
+                      </div>
+                      <span className="text-[15px] font-semibold" style={{ color: "#000" }}>{contact.name || `Contact ${idx + 1}`}</span>
+                      {contact.miniGrantAuthority && <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: "#FEF3C7", color: "#92400E" }}>Mini-Grant Authority</span>}
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <input type="text" value={contact.name} onChange={(e) => updateContact(idx, "name", e.target.value)} placeholder="Name" className="text-[13px] border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20" />
-                      <input type="text" value={contact.title} onChange={(e) => updateContact(idx, "title", e.target.value)} placeholder="Title" className="text-[13px] border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20" />
-                      <input type="email" value={contact.email} onChange={(e) => updateContact(idx, "email", e.target.value)} placeholder="Email" className="text-[13px] border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20" />
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={contact.miniGrantAuthority} onChange={(e) => updateContact(idx, "miniGrantAuthority", e.target.checked)} className="w-4 h-4 rounded accent-[#5BB4A9]" />
-                        <span className="text-[13px]" style={{ color: "#333333" }}>Mini-grant authority</span>
+                    <button onClick={() => removeContact(idx)} className="text-[12px] font-medium px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors" style={{ color: "#E53E3E" }}>Remove</button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className={cLabelCls}>Name</label><input type="text" value={contact.name} onChange={(e) => updateContact(idx, "name", e.target.value)} placeholder="Full name" className={cInputCls} /></div>
+                    <div><label className={cLabelCls}>Title</label><input type="text" value={contact.title} onChange={(e) => updateContact(idx, "title", e.target.value)} placeholder="Job title" className={cInputCls} /></div>
+                    <div><label className={cLabelCls}>Email</label><input type="email" value={contact.email} onChange={(e) => updateContact(idx, "email", e.target.value)} placeholder="email@org.edu" className={cInputCls} /></div>
+                    <div className="flex items-end">
+                      <label className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer w-full" style={{ backgroundColor: contact.miniGrantAuthority ? "#FEF3C7" : "#FAFAFA", border: "1px solid #E5E5E5" }}>
+                        <input type="checkbox" checked={contact.miniGrantAuthority} onChange={(e) => updateContact(idx, "miniGrantAuthority", e.target.checked)} className="w-5 h-5 rounded accent-[#5BB4A9]" />
+                        <span className="text-[14px]" style={{ color: "#333" }}>Mini-grant authority</span>
                       </label>
                     </div>
                   </div>
-                ))}
-              </div>
-              {/* Add Contact Form */}
-              <div className="rounded-xl" style={{ padding: "16px 20px", border: "1px dashed #E5E5E5" }}>
-                <div className="text-[13px] font-medium mb-3" style={{ color: "#333333" }}>Add Contact</div>
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  <input type="text" value={newContact.name} onChange={(e) => setNewContact({ ...newContact, name: e.target.value })} placeholder="Name" className="text-[13px] border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20" />
-                  <input type="text" value={newContact.title} onChange={(e) => setNewContact({ ...newContact, title: e.target.value })} placeholder="Title" className="text-[13px] border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20" />
-                  <input type="email" value={newContact.email} onChange={(e) => setNewContact({ ...newContact, email: e.target.value })} placeholder="Email" className="text-[13px] border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20" />
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={newContact.miniGrantAuthority} onChange={(e) => setNewContact({ ...newContact, miniGrantAuthority: e.target.checked })} className="w-4 h-4 rounded accent-[#5BB4A9]" />
-                    <span className="text-[13px]" style={{ color: "#333333" }}>Mini-grant authority</span>
-                  </label>
                 </div>
-                <button onClick={addContact} disabled={!newContact.name} className="px-5 py-2 text-white text-[13px] font-medium rounded-full hover:opacity-90 transition-colors disabled:opacity-50" style={{ background: GRADIENT }}>Add Contact</button>
+              ))}
+
+              {/* Add Contact */}
+              <div className="rounded-2xl" style={{ padding: "24px 28px", border: "2px dashed #E0E0E0", backgroundColor: "#FFF" }}>
+                <div className="text-[15px] font-semibold mb-4" style={{ color: "#000" }}>Add New Contact</div>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div><label className={cLabelCls}>Name</label><input type="text" value={newContact.name} onChange={(e) => setNewContact({ ...newContact, name: e.target.value })} placeholder="Full name" className={cInputCls} /></div>
+                  <div><label className={cLabelCls}>Title</label><input type="text" value={newContact.title} onChange={(e) => setNewContact({ ...newContact, title: e.target.value })} placeholder="Job title" className={cInputCls} /></div>
+                  <div><label className={cLabelCls}>Email</label><input type="email" value={newContact.email} onChange={(e) => setNewContact({ ...newContact, email: e.target.value })} placeholder="email@org.edu" className={cInputCls} /></div>
+                  <div className="flex items-end">
+                    <label className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer w-full" style={{ backgroundColor: "#FAFAFA", border: "1px solid #E5E5E5" }}>
+                      <input type="checkbox" checked={newContact.miniGrantAuthority} onChange={(e) => setNewContact({ ...newContact, miniGrantAuthority: e.target.checked })} className="w-5 h-5 rounded accent-[#5BB4A9]" />
+                      <span className="text-[14px]" style={{ color: "#333" }}>Mini-grant authority</span>
+                    </label>
+                  </div>
+                </div>
+                <button onClick={addContact} disabled={!newContact.name} className="px-6 py-3 text-white text-[14px] font-medium rounded-full hover:opacity-90 transition-colors disabled:opacity-40" style={{ background: GRADIENT }}>Add Contact</button>
               </div>
             </div>
           )}
 
           {activeTab === "notes" && (
             <div>
-              <h3 className="text-[14px] font-medium mb-3" style={{ color: "#333333" }}>Notes</h3>
-              <div className="flex gap-3 mb-5">
-                <input
-                  type="text"
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Add a note..."
-                  className="flex-1 text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#5BB4A9]/20"
-                  onKeyDown={(e) => e.key === "Enter" && addNote()}
-                />
-                <button onClick={addNote} className="px-6 py-3 text-white text-sm font-medium rounded-full hover:opacity-90 transition-colors" style={{ background: GRADIENT }}>Add</button>
+              {/* Add note input */}
+              <div className={cSectionCls} style={{ ...cSectionStyle, marginBottom: "24px" }}>
+                <div className="text-[15px] font-semibold mb-4" style={{ color: "#000" }}>Add a Note</div>
+                <div className="flex gap-3">
+                  <input type="text" value={newNote} onChange={(e) => setNewNote(e.target.value)} placeholder="Type your note here..." className={cInputCls + " flex-1"} style={{ fontSize: "15px" }} onKeyDown={(e) => e.key === "Enter" && addNote()} />
+                  <button onClick={addNote} className="px-7 py-3 text-white text-[14px] font-medium rounded-xl hover:opacity-90 transition-colors flex-shrink-0" style={{ background: GRADIENT }}>Add</button>
+                </div>
               </div>
+
+              {/* Notes list */}
               <div className="space-y-3">
                 {[...(coalition.notes || [])].reverse().map((note, i) => (
-                  <div key={i} className="rounded-2xl" style={{ padding: "14px 24px", backgroundColor: "#EAF6F5" }}>
-                    <div className="text-[12px] mb-1.5" style={{ color: "#333333" }}>{formatDate(note.date)}</div>
-                    <div className="text-[14px]" style={{ color: "#000000" }}>{note.text}</div>
+                  <div key={i} className="rounded-2xl" style={{ padding: "18px 24px", backgroundColor: "#FFF", border: "1px solid #F0F0F0" }}>
+                    <div className="text-[12px] font-medium mb-2" style={{ color: "#999" }}>{formatDate(note.date)}</div>
+                    <div className="text-[14px] leading-relaxed" style={{ color: "#333" }}>{note.text}</div>
                   </div>
                 ))}
                 {(!coalition.notes || coalition.notes.length === 0) && (
-                  <div className="text-sm text-gray-400 text-center py-8">No notes yet</div>
+                  <div className="text-[14px] text-center py-12" style={{ color: "#CCC" }}>No notes yet. Add your first note above.</div>
                 )}
               </div>
             </div>
           )}
+
+          </div>
         </div>
       </div>
     </div>
@@ -4710,35 +4729,90 @@ function AIImportModal({ onSave, onClose }) {
     setError("")
     setParsed(null)
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 500,
-          system: "You are a contact parser for a university sales CRM. Extract contact information from the pasted text and return ONLY a JSON object with these exact fields: firstName, lastName, title, department, role (must be one of: Decision Maker, Champion, Influencer — infer from title if not stated), personaType (must be one of: Health Promotion / Wellness, AOD Prevention / Recovery, Student Affairs Leadership, Counseling Center Leadership, Case Management / BIT, Other — infer from title and department), email, phone, verifyUrl. If a field cannot be determined, return an empty string for that field. Return nothing except the JSON object.",
-          messages: [{ role: "user", content: pasteText }],
-        }),
-      })
-      if (!res.ok) throw new Error(`API error: ${res.status}`)
-      const data = await res.json()
-      const raw = data.content?.[0]?.text || ""
-      const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim()
-      const obj = JSON.parse(cleaned)
-      setParsed({
-        firstName: obj.firstName || "",
-        lastName: obj.lastName || "",
-        title: obj.title || "",
-        department: obj.department || "",
-        role: CONTACT_ROLES.includes(obj.role) ? obj.role : "Champion",
-        personaType: PERSONA_TYPES.includes(obj.personaType) ? obj.personaType : "Other",
-        email: obj.email || "",
-        phone: obj.phone || "",
-        verifyUrl: obj.verifyUrl || "",
-        outreach: "Not Contacted",
-      })
+      // Smart local parser — handles tab-separated spreadsheet rows and free text
+      const text = pasteText.trim()
+      const fields = text.includes("\t") ? text.split("\t").map(s => s.trim()).filter(Boolean) : text.split(/\s{2,}/).map(s => s.trim()).filter(Boolean)
+
+      let email = "", phone = "", verifyUrl = "", role = "", personaType = "", department = ""
+      let firstName = "", lastName = "", title = ""
+      const unmatched = []
+
+      for (const field of fields) {
+        if (/@/.test(field) && /\.\w{2,}/.test(field)) { email = field; continue }
+        if (/^https?:\/\//.test(field)) { verifyUrl = field; continue }
+        if (/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(field.replace(/\s/g, ""))) { phone = field; continue }
+        if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(field)) continue // skip dates
+        if (/^\d{1,3}$/.test(field)) continue // skip bare numbers
+        const fieldLower = field.toLowerCase()
+        if (CONTACT_ROLES.some(r => r.toLowerCase() === fieldLower)) { role = CONTACT_ROLES.find(r => r.toLowerCase() === fieldLower); continue }
+        if (PERSONA_TYPES.some(pt => fieldLower.includes(pt.toLowerCase().split(" / ")[0]))) { personaType = PERSONA_TYPES.find(pt => fieldLower.includes(pt.toLowerCase().split(" / ")[0])); continue }
+        if (/^(low|medium|high|very high|n\/a)$/i.test(field)) continue // skip confidence
+        if (/^(julian|fred|jessel)$/i.test(field)) continue // skip sentBy
+        unmatched.push(field)
+      }
+
+      // From unmatched: find department (long, has "department/health/student/affairs")
+      const deptIdx = unmatched.findIndex(f => /department|health|student|affairs|wellness|counseling|prevention|promotion|recovery/i.test(f) && f.length > 15)
+      if (deptIdx >= 0) { department = unmatched.splice(deptIdx, 1)[0] }
+
+      // Find title (contains common title words)
+      const titleIdx = unmatched.findIndex(f => /director|manager|coordinator|counselor|specialist|dean|VP|provost|chief|officer|associate|assistant|advisor/i.test(f))
+      if (titleIdx >= 0) { title = unmatched.splice(titleIdx, 1)[0] }
+
+      // First remaining short-ish field with 2-3 words is likely the name
+      const nameIdx = unmatched.findIndex(f => f.split(/\s+/).length >= 2 && f.split(/\s+/).length <= 4 && f.length < 40)
+      if (nameIdx >= 0) {
+        const nameParts = unmatched.splice(nameIdx, 1)[0].split(/\s+/)
+        // If title words are mixed into the name field (e.g. "Donaji Stelzig Case Manager"), split them
+        const titleWords = ["case", "manager", "director", "coordinator", "counselor", "specialist", "dean", "associate", "assistant", "advisor"]
+        const titleStart = nameParts.findIndex(w => titleWords.includes(w.toLowerCase()))
+        if (titleStart > 0 && titleStart <= 3) {
+          firstName = nameParts.slice(0, titleStart === 1 ? 1 : titleStart - 1).join(" ")
+          lastName = titleStart > 1 ? nameParts[titleStart - 1] : ""
+          if (!title) title = nameParts.slice(titleStart).join(" ")
+        } else {
+          firstName = nameParts[0] || ""
+          lastName = nameParts.slice(1).join(" ")
+        }
+      }
+
+      // If still no name, try first 1-2 word field
+      if (!firstName && unmatched.length > 0) {
+        const shortIdx = unmatched.findIndex(f => f.split(/\s+/).length <= 2 && f.length < 25)
+        if (shortIdx >= 0) {
+          const parts = unmatched.splice(shortIdx, 1)[0].split(/\s+/)
+          firstName = parts[0] || ""; lastName = parts[1] || ""
+        }
+      }
+
+      // Remaining unmatched could be title or department
+      if (!title && unmatched.length > 0) title = unmatched.shift()
+      if (!department && unmatched.length > 0) department = unmatched.shift()
+
+      // Infer role from title if not found
+      if (!role) {
+        const t = (title + " " + department).toLowerCase()
+        if (/director|dean|VP|provost|chief|president/i.test(t)) role = "Decision Maker"
+        else if (/manager|coordinator|counselor|specialist|advisor/i.test(t)) role = "Champion"
+        else role = "Influencer"
+      }
+
+      // Infer persona type from title/department if not found
+      if (!personaType) {
+        const t = (title + " " + department).toLowerCase()
+        if (/health promotion|wellness/i.test(t)) personaType = "Health Promotion / Wellness"
+        else if (/aod|alcohol|drug|substance|prevention|recovery/i.test(t)) personaType = "AOD Prevention / Recovery"
+        else if (/student affairs|dean of students/i.test(t)) personaType = "Student Affairs Leadership"
+        else if (/counseling|mental health/i.test(t)) personaType = "Counseling Center Leadership"
+        else if (/case manage|bit|behav/i.test(t)) personaType = "Case Management / BIT"
+        else personaType = "Other"
+      }
+
+      if (!firstName && !lastName && !email) throw new Error("no data")
+
+      setParsed({ firstName, lastName, title, department, role, personaType, email, phone, verifyUrl, outreach: "Not Contacted" })
     } catch (err) {
-      setError("Could not parse contact info. Please try again or add manually.")
+      setError("Could not parse contact info. Try pasting a row with name, title, email separated by tabs.")
     } finally {
       setLoading(false)
     }
